@@ -1,0 +1,26 @@
+version: "3.9"
+
+volumes:
+  pde-workspace:
+
+services:
+  ide:
+    container_name: pde-ide 
+    build:
+      dockerfile: Dockerfile
+      context: ./
+    command: 
+      - /bin/bash
+      - -c 
+      - | 
+        eval `ssh-agent -s`
+        ssh-add ~/.ssh/id_rsa
+        git clone git@github.com:nicklundin08-pde/sample-projects.git /workspace
+        sleep infinity
+    volumes:
+      - ~/.gitconfig:/root/.gitconfig
+      - ~/.ssh/:/root/.ssh/
+      - /var/run/docker.sock:/var/run/docker.sock 
+      - pde-workspace:/workspace
+    ports:
+      - "80:8080"
